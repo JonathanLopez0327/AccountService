@@ -50,9 +50,44 @@ public class AccountServiceImpl implements AccountService {
     public AccountResponse listAccountById(long accountId) {
         log.info("Getting accoutn by id {}", accountId);
         Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new AccountServiceCustomException("Account with given id not found", "ACCOUNT_NOT_FOUND"));
+                .orElseThrow(() -> new AccountServiceCustomException(
+                        "Account with given id not found",
+                        "ACCOUNT_NOT_FOUND"));
         AccountResponse accountResponse = new AccountResponse();
         copyProperties(account, accountResponse);
         return accountResponse;
+    }
+
+    @Override
+    public void debitAmount(long accountId, long amount) {
+        log.info("Debit expense {} for account : {}", amount, accountId);
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new AccountServiceCustomException(
+                        "Account with given id not found",
+                        "ACCOUNT_NOT_FOUND"));
+
+        if (account.getAmount() < amount) {
+            throw new AccountServiceCustomException(
+                    "Account does not have sufficient balance",
+                    "INSUFFICIENT_BALANCE"
+            );
+        }
+
+        account.setAmount(account.getAmount() - amount);
+        accountRepository.save(account);
+        log.info("Account amount updated successfully");
+    }
+
+    @Override
+    public void creditAmount(long accountId, long amount) {
+        log.info("Credit income {} for account : {}", amount, accountId);
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new AccountServiceCustomException(
+                        "Account with given id not found",
+                        "ACCOUNT_NOT_FOUND"));
+
+        account.setAmount(account.getAmount() + amount);
+        accountRepository.save(account);
+        log.info("Account amount updated successfully");
     }
 }

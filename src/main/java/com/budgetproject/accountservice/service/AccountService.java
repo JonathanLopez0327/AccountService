@@ -11,4 +11,8 @@ public interface AccountService {
     List<AccountResponse> listAllAccounts();
 
     AccountResponse listAccountById(long accountId);
+
+    void debitAmount(long accountId, long amount);
+
+    void creditAmount(long accountId, long amount);
 }

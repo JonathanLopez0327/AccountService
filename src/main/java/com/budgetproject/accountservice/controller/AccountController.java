@@ -4,7 +4,6 @@ import com.budgetproject.accountservice.model.AccountRequest;
 import com.budgetproject.accountservice.model.AccountResponse;
 import com.budgetproject.accountservice.service.AccountService;
 import jakarta.validation.Valid;
-import jakarta.ws.rs.POST;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,4 +35,23 @@ public class AccountController {
         AccountResponse accountResponse = accountService.listAccountById(accountId);
         return new ResponseEntity<>(accountResponse, HttpStatus.OK);
     }
+
+    @PutMapping("/debitAmount/{id}")
+    public ResponseEntity<Void> debitAmount(
+            @PathVariable("id") long accountId,
+            @RequestParam long amount
+    ) {
+        accountService.debitAmount(accountId, amount);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/creditAmount/{id}")
+    public ResponseEntity<Void> creditAmount(
+            @PathVariable("id") long accountId,
+            @RequestParam long amount
+    ) {
+        accountService.creditAmount(accountId, amount);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
