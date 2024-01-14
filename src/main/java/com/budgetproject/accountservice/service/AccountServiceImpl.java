@@ -18,7 +18,6 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private AccountRepository accountRepository;
 
-
     @Override
     public long recordAccount(AccountRequest accountRequest) {
         log.info("Recording new account");
@@ -52,7 +51,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new AccountServiceCustomException(
                         "Account with given id not found",
-                        "ACCOUNT_NOT_FOUND"));
+                        "ACCOUNT_NOT_FOUND", 404));
         AccountResponse accountResponse = new AccountResponse();
         copyProperties(account, accountResponse);
         return accountResponse;
@@ -64,12 +63,13 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new AccountServiceCustomException(
                         "Account with given id not found",
-                        "ACCOUNT_NOT_FOUND"));
+                        "ACCOUNT_NOT_FOUND", 404));
 
         if (account.getAmount() < amount) {
             throw new AccountServiceCustomException(
                     "Account does not have sufficient balance",
-                    "INSUFFICIENT_BALANCE"
+                    "INSUFFICIENT_BALANCE",
+                    500
             );
         }
 
@@ -84,7 +84,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new AccountServiceCustomException(
                         "Account with given id not found",
-                        "ACCOUNT_NOT_FOUND"));
+                        "ACCOUNT_NOT_FOUND", 404));
 
         account.setAmount(account.getAmount() + amount);
         accountRepository.save(account);

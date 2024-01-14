@@ -14,6 +14,6 @@ public class RestResponseEntityCustomExceptionHandler extends ResponseEntityExce
         return new ResponseEntity<>(ErrorResponse.builder()
                 .errorMessage(exception.getMessage())
                 .errorCode(exception.getErrorCode())
-                .build(), HttpStatus.NOT_FOUND);
+                .build(), HttpStatus.valueOf(exception.getStatus()));
     }
 }
